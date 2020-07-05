@@ -1,41 +1,45 @@
 import java.io.File;
-import java.io.IOException;
+import java.io.FileNotFoundException;
 import java.util.HashSet;
 import java.util.Scanner;
 
-public class QuickFind {
+public class QuickUnion {
 
     int[] indices;
-    public QuickFind(int n) {
+    public QuickUnion(int n) {
         indices = new int[n];
         initialize(n);
     }
 
     void union(int p, int q) {
-        int pid = indices[p];
-        int qid = indices[q];
-
-        for (int i = 0; i < indices.length; i++) {
-            if (indices[i] == pid) {
-                indices[i] = qid;
-            }
-        }
+        int p_root = root(p);
+        int q_root = root(q);
+        indices[p_root] = q_root;
     }
 
     boolean connected(int p, int q) {
-        return indices[p] == indices[q];
+        int p_root = root(p);
+        int q_root = root(q);
+        return p_root == q_root;
     }
 
     int find(int p) {
-        return indices[p];
+        return root(p);
     }
 
     int count() {
-        HashSet<Integer> uniqueIds = new HashSet<>();
-        for (int index : indices) {
-            uniqueIds.add(index);
+        HashSet<Integer> roots = new HashSet<>();
+        for (int index: indices) {
+            roots.add(root(index));
         }
-        return uniqueIds.size();
+        return roots.size();
+    }
+
+    int root(int p) {
+        while(indices[p] != p) {
+            p = indices[p];
+        }
+        return p;
     }
 
     void initialize(int n) {
@@ -44,7 +48,7 @@ public class QuickFind {
         }
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws FileNotFoundException {
         Scanner sc = new Scanner(new File("./resources/sample.txt"));
         int N = sc.nextInt();
 
@@ -60,5 +64,4 @@ public class QuickFind {
         }
         System.out.println(quickFind.count());
     }
-
 }
