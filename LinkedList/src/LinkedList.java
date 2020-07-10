@@ -90,6 +90,49 @@ public class LinkedList {
         }
         return count;
     }
+    Node getLastNode() {
+        Node dummy = head;
+        while (dummy != null && dummy.next != null) {
+            dummy = dummy.next;
+        }
+        return dummy;
+    }
+    void moveLastElementToFront() {
+        Node lastNode = getLastNode();
+        Node dummy = head;
+        head = new Node(lastNode.data);
+        head.next = dummy;
+        Node curr = head;
+        while (curr.next.next != null) {
+            curr = curr.next;
+        }
+        curr.next = null;
+    }
+    void printLinkedList() {
+        Node dummy = head;
+        StringBuilder sb = new StringBuilder();
+        while (dummy != null) {
+            sb.append(dummy.data);
+            sb.append("->");
+            dummy = dummy.next;
+        }
+
+        System.out.println(sb.toString().substring(0, sb.toString().length() - 2));
+    }
+    void printSize() {
+        System.out.println(size);
+    }
+    void reverse() {
+        Node prev = null;
+        Node next = null, curr = head;
+        while (curr != null) {
+            next = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = next;
+        }
+        head = prev;
+    }
 
     void parse(String s) {
         String[] commands = s.split(" ");
@@ -122,32 +165,14 @@ public class LinkedList {
                 int numTimes = countOccurences(secondArg);
                 System.out.println(secondArg + " occurs " + numTimes + " times");
                 break;
-
-
+            case "moveToFront":
+                moveLastElementToFront();
+                break;
+            case "reverse":
+                reverse();
+                break;
         }
     }
-    Node getLastNode() {
-        Node dummy = head;
-        while (dummy != null && dummy.next != null) {
-            dummy = dummy.next;
-        }
-        return dummy;
-    }
-    void printLinkedList() {
-        Node dummy = head;
-        StringBuilder sb = new StringBuilder();
-        while (dummy != null) {
-            sb.append(dummy.data);
-            sb.append("->");
-            dummy = dummy.next;
-        }
-
-        System.out.println(sb.toString().substring(0, sb.toString().length() - 2));
-    }
-    void printSize() {
-        System.out.println(size);
-    }
-
     public static void main(String[] args) throws FileNotFoundException {
         Scanner sc = new Scanner(new File("./resources/ll_test.txt"));
         LinkedList ll = new LinkedList();
